@@ -7,7 +7,8 @@ namespace Sekougi.Tarantool.Iproto
 {
     public class AuthRequest : IRequest
     {
-        private const int IPROTO_USER_NAME_KEY = 0x23;
+        private const int USER_NAME_KEY = 0x23;
+        private const int AUTH_TUPLE_KEY = 0x21;
         private const string AUTH_MECHANISM = "chap-sha1";
 
         private string _userName;
@@ -25,9 +26,14 @@ namespace Sekougi.Tarantool.Iproto
         
         public void Serialize(MessagePackWriter writer)
         {
-            writer.WriteDictionaryHeader(1);
+            writer.WriteDictionaryHeader(2);
+            
+            // username 
+            writer.Write(USER_NAME_KEY);
             writer.Write(_userName, Encoding.UTF8);
             
+            // tuple with auth mechanism and scramble 
+            writer.Write(AUTH_TUPLE_KEY);
             writer.WriteArrayHeader(2);
             writer.Write(AUTH_MECHANISM, Encoding.UTF8);
             writer.WriteBinary(_scramble);
