@@ -1,4 +1,3 @@
-using Sekougi.Tarantool.Iproto.Requests;
 using Sekougi.Tarantool.Iproto.Responses;
 using System.Collections.Generic;
 using System;
@@ -15,10 +14,25 @@ namespace Sekougi.Tarantool.Iproto
         
         public ResponseFactory()
         {
+            Func<ResponseBase> dataResponseCreator = () => new DataResponse();
+            Func<ResponseBase> okResponseCreator = () => new OkResponse();
+            
             _responseCreators = new Dictionary<RequestCode, Func<ResponseBase>>
             {
-                {RequestCode.Ok, () => new OkResponse()},
                 {RequestCode.ErrorMin, () => new ErrorResponse()},
+                {RequestCode.Ok, okResponseCreator},
+                {RequestCode.Ping, okResponseCreator},
+                {RequestCode.Select, dataResponseCreator},
+                {RequestCode.Insert, dataResponseCreator},
+                {RequestCode.Replace, dataResponseCreator},
+                {RequestCode.Update, dataResponseCreator},
+                {RequestCode.Delete, dataResponseCreator},
+                {RequestCode.Eval, dataResponseCreator},
+                {RequestCode.Upsert, dataResponseCreator},
+                {RequestCode.Call, dataResponseCreator},
+                {RequestCode.Execute, dataResponseCreator},
+                {RequestCode.Nop, dataResponseCreator},
+                {RequestCode.Prepare, dataResponseCreator},
             };
         }
 
