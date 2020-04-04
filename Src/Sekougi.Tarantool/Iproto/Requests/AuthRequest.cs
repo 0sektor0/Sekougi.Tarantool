@@ -3,9 +3,9 @@ using System;
 using System.Text;
 
 
-namespace Sekougi.Tarantool.Iproto
+namespace Sekougi.Tarantool.Iproto.Requests
 {
-    public class AuthRequest : IRequest
+    public class AuthRequest : RequestBase
     {
         private const int USER_NAME_KEY = 0x23;
         private const int AUTH_TUPLE_KEY = 0x21;
@@ -13,9 +13,8 @@ namespace Sekougi.Tarantool.Iproto
 
         private string _userName;
         private byte[] _scramble;
-        private int _syncId;
         
-        public RequestCode Code => RequestCode.Auth;
+        public override RequestCode Code => RequestCode.Auth;
 
 
         public AuthRequest(string userName, string password, ReadOnlySpan<byte> base64Salt)
@@ -24,7 +23,7 @@ namespace Sekougi.Tarantool.Iproto
             _scramble = CalculateScramble(base64Salt, password);
         }
         
-        public void Serialize(MessagePackWriter writer)
+        protected override void SerializeBody(MessagePackWriter writer)
         {
             writer.WriteDictionaryHeader(2);
             
