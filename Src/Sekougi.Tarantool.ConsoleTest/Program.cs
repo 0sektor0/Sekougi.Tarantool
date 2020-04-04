@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Sockets;
-using ProGaudi.MsgPack.Light;
-using ProGaudi.Tarantool.Client;
-using ProGaudi.Tarantool.Client.Model;
-using Sekougi.MessagePack;
 using Sekougi.Tarantool.Iproto;
 using Sekougi.Tarantool.Iproto.Requests;
 
