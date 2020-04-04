@@ -1,5 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Net.Sockets;
+using System.Text;
+using Sekougi.MessagePack;
+using Sekougi.MessagePack.Buffers;
 using Sekougi.Tarantool.Iproto;
 using Sekougi.Tarantool.Iproto.Requests;
 
@@ -38,6 +42,21 @@ namespace Sekougi.Tarantool.ConsoleTest
             authRequest.SyncId = 2;
             requestWriter.Write(authRequest);
             responseReader.Read();
+        }
+
+        private static void SniffBytes(Stream stream)
+        {
+            var reader = new MessagePackReader(new MessagePackStreamBuffer(stream));
+            var length = reader.ReadUint();
+            var bytes = new byte[length];
+            stream.Read(bytes);
+
+            var stringBuilder = new StringBuilder();
+            for (var i = 0; i < length; i++)
+            {
+                stringBuilder.Append($"{bytes[i]}, ");
+            }
+            var result = $"[{stringBuilder}]";
         }
     }
 }

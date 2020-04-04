@@ -29,6 +29,8 @@ namespace Sekougi.Tarantool.Iproto
             var length = _reader.ReadUint();
             var header = new Header();
             header.Deserialize(_reader);
+
+            var bodyMapLength = _reader.ReadDictionaryLength();
         }
     }
 }
