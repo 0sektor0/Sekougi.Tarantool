@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Sekougi.MessagePack;
 using System;
 using System.IO;
@@ -10,7 +9,7 @@ namespace Sekougi.Tarantool.Iproto
 {
     public class ResponseReader : IDisposable
     {
-        private IMessagePackBuffer _buffer;
+        private MessagePackStreamBuffer _buffer;
         private MessagePackReader _reader;
         
         
@@ -28,8 +27,8 @@ namespace Sekougi.Tarantool.Iproto
         public void Read()
         {
             var length = _reader.ReadUint();
-            var serializer = MessagePackSerializersRepository.Get<Dictionary<uint, uint>>();
-            var diciotnary = serializer.Deserialize(_reader);
+            var header = new Header();
+            header.Deserialize(_reader);
         }
     }
 }

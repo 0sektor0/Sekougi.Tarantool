@@ -12,14 +12,14 @@ namespace Sekougi.Tarantool.Iproto
     {
         private const int LENGTH_OFFSET = 5;
         
-        private IMessagePackBuffer _buffer;
+        private MessagePackBuffer _buffer;
         private MessagePackWriter _writer;
         private Stream _destination;
 
         
         public RequestWriter(Stream destination)
         {
-            _buffer = new MessagePackMemoryStreamBuffer();
+            _buffer = new MessagePackBuffer();
             _writer = new MessagePackWriter(_buffer);
             _destination = destination;
         }
@@ -37,6 +37,8 @@ namespace Sekougi.Tarantool.Iproto
 
         private ReadOnlySpan<byte> SerializeRequest(RequestBase request)
         {
+            _buffer.Clear();
+            
             _buffer.Seek(LENGTH_OFFSET, SeekOrigin.Begin);
             request.Serialize(_writer);
 

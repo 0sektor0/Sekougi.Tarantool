@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using ProGaudi.MsgPack.Light;
+using ProGaudi.Tarantool.Client;
+using ProGaudi.Tarantool.Client.Model;
 using Sekougi.MessagePack;
 using Sekougi.Tarantool.Iproto;
-
+using Sekougi.Tarantool.Iproto.Requests;
 
 
 namespace Sekougi.Tarantool.ConsoleTest
@@ -12,47 +16,34 @@ namespace Sekougi.Tarantool.ConsoleTest
     class Program
     {
         static int port = 3301;
-        static string address = "127.0.0.1";
+        static string host = "127.0.0.1";
         
         
         public static void Main()
         {
-            ConnectionTest();
+            PlayWithConnection();
         }
 
-        private static void ConnectionTest()
+        private static void PlayWithConnection()
         {
-            
-            var ipPoint = new IPEndPoint(IPAddress.Parse(address), port);
-            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
+            using var tcpClient = new TcpClient(host, port);
+            var stream = tcpClient.GetStream();
             var buffer = new byte[512];
             
-            socket.Connect(ipPoint);
-            socket.Receive(buffer);
+            using var requestWriter = new RequestWriter(stream);
+            using var responseReader = new ResponseReader(stream);
 
+            stream.Read(buffer);
             var base64Salt = new ReadOnlySpan<byte>(buffer, 64, 44);
             var authRequest = new AuthRequest("user_test", "user_test", base64Salt);
             
-            using var requestSerializer = new RequestSerializer();
-            var requestBytes = requestSerializer.SerializeRequest(authRequest);
-
-            socket.Send(requestBytes);
-            socket.Receive(buffer);
+            authRequest.SyncId = 1;
+            requestWriter.Write(authRequest);
+            responseReader.Read();
             
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Close();
-            
-            DecodeResponse(buffer);
-        }
-
-        private static void DecodeResponse(byte[] data)
-        {
-            using var buffer = new MessagePackStreamBuffer();
-            buffer.Write(data);
-            buffer.Drop();
-            
-            var reader = new MessagePackReader(buffer);
+            authRequest.SyncId = 2;
+            requestWriter.Write(authRequest);
+            responseReader.Read();
         }
     }
 }
