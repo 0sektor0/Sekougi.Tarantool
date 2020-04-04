@@ -12,21 +12,21 @@ namespace Sekougi.Tarantool.Iproto
     {
         private const int LENGTH_OFFSET = 5;
         
-        private MessagePackBuffer _buffer;
-        private MessagePackWriter _writer;
-        private Stream _destination;
+        private readonly MessagePackBuffer _serializationBuffer;
+        private readonly MessagePackWriter _writer;
+        private readonly Stream _destination;
 
         
         public RequestWriter(Stream destination)
         {
-            _buffer = new MessagePackBuffer();
-            _writer = new MessagePackWriter(_buffer);
+            _serializationBuffer = new MessagePackBuffer();
+            _writer = new MessagePackWriter(_serializationBuffer);
             _destination = destination;
         }
 
         public void Dispose()
         {
-            _buffer.Dispose();
+            _serializationBuffer.Dispose();
         }
 
         public void Write(RequestBase request)
@@ -37,16 +37,16 @@ namespace Sekougi.Tarantool.Iproto
 
         private ReadOnlySpan<byte> SerializeRequest(RequestBase request)
         {
-            _buffer.Clear();
+            _serializationBuffer.Clear();
             
-            _buffer.Seek(LENGTH_OFFSET, SeekOrigin.Begin);
+            _serializationBuffer.Seek(LENGTH_OFFSET, SeekOrigin.Begin);
             request.Serialize(_writer);
 
-            var requestLength = _buffer.Length - LENGTH_OFFSET;
-            _buffer.Seek(0, SeekOrigin.Begin);
+            var requestLength = _serializationBuffer.Length - LENGTH_OFFSET;
+            _serializationBuffer.Seek(0, SeekOrigin.Begin);
             _writer.Write((uint)requestLength, false);
 
-            return _buffer.GetPart(0, _buffer.Length);
+            return _serializationBuffer.GetPart(0, _serializationBuffer.Length);
         }
     }
 }

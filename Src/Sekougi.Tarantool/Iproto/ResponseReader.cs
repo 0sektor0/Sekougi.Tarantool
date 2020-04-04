@@ -1,36 +1,41 @@
-using Sekougi.MessagePack;
-using System;
-using System.IO;
 using Sekougi.MessagePack.Buffers;
+using Sekougi.MessagePack;
+using System.IO;
+using Sekougi.Tarantool.Exceptions;
+using Sekougi.Tarantool.Iproto.Responses;
 
 
 
 namespace Sekougi.Tarantool.Iproto
 {
-    public class ResponseReader : IDisposable
+    public class ResponseReader
     {
-        private MessagePackStreamBuffer _buffer;
-        private MessagePackReader _reader;
+        private readonly ResponseFactory _responseFactory;
+        private readonly MessagePackReader _reader;
         
         
         public ResponseReader(Stream stream)
         {
-            _buffer = new MessagePackStreamBuffer(stream);
-            _reader = new MessagePackReader(_buffer);
+            var buffer = new MessagePackStreamBuffer(stream);
+            _reader = new MessagePackReader(buffer);
+            _responseFactory = new ResponseFactory();
         }
 
-        public void Dispose()
-        {
-            _buffer.Dispose();
-        }
-
-        public void Read()
+        public ResponseBase Read()
         {
             var length = _reader.ReadUint();
             var header = new Header();
             header.Deserialize(_reader);
 
-            var bodyMapLength = _reader.ReadDictionaryLength();
+            var response = _responseFactory.Create(header.Code);
+            if (response != null)
+            {
+                response.Deserialize(_reader, header.SyncId);
+                return response;
+            }
+
+            _reader.ReadRawBytes((int) length);
+            throw new UnsupportedResponseTypeException(header.Code);
         }
     }
 }

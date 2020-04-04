@@ -1,6 +1,5 @@
 namespace Sekougi.Tarantool.Iproto.Requests
 {
-    // To be continued
     public enum RequestCode
     {
         Ok = 0x00,
@@ -23,6 +22,9 @@ namespace Sekougi.Tarantool.Iproto.Requests
         VoteDeprecated = 0x43,
         Vote = 0x44,
         FetchSnapshot = 0x45,
-        Register = 0x46
+        Register = 0x46,
+        
+        ErrorMin = 0x8000,
+        ErrorMax = 0x9000,
     }
 }

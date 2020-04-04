@@ -29,7 +29,7 @@ namespace Sekougi.Tarantool.ConsoleTest
             var buffer = new byte[512];
             
             using var requestWriter = new RequestWriter(stream);
-            using var responseReader = new ResponseReader(stream);
+            var responseReader = new ResponseReader(stream);
 
             stream.Read(buffer);
             var base64Salt = new ReadOnlySpan<byte>(buffer, 64, 44);
@@ -37,11 +37,11 @@ namespace Sekougi.Tarantool.ConsoleTest
             
             authRequest.SyncId = 1;
             requestWriter.Write(authRequest);
-            responseReader.Read();
+            var response = responseReader.Read();
             
             authRequest.SyncId = 2;
             requestWriter.Write(authRequest);
-            responseReader.Read();
+            response = responseReader.Read();
         }
 
         private static void SniffBytes(Stream stream)
