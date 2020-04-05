@@ -6,7 +6,7 @@ using Sekougi.MessagePack;
 using Sekougi.MessagePack.Buffers;
 using Sekougi.Tarantool.Iproto;
 using Sekougi.Tarantool.Iproto.Requests;
-using Sekougi.Tarantool.Iproto.Enums;
+
 
 
 namespace Sekougi.Tarantool.ConsoleTest
@@ -39,11 +39,9 @@ namespace Sekougi.Tarantool.ConsoleTest
             requestWriter.Write(authRequest);
             var authResponse = responseReader.Read();
 
-            var selectRequest = new SelectRequest((uint)SystemSpaceE.Vspace, 0, IteratorE.All, 0U) {SyncId = 2};
-            requestWriter.Write(selectRequest);
-            var selectResponse = responseReader.Read();
-            
-            //SniffBytes(stream);
+            //var selectRequest = new SelectRequest((uint)SystemSpaceE.Vspace, 0, IteratorE.All, 0U) {SyncId = 2};
+            //requestWriter.Write(selectRequest);
+            //var selectResponse = responseReader.Read();
         }
 
         private static void SniffBytes(Stream stream)

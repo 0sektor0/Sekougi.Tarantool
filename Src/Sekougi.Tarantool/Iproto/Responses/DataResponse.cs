@@ -1,16 +1,25 @@
-using System;
 using Sekougi.MessagePack;
+using Sekougi.MessagePack.Serializers;
 
 
 
 namespace Sekougi.Tarantool.Iproto.Responses
 {
-    public class DataResponse : ResponseBase
+    public class DataResponse<T> : Response
     {
-        protected override void DeserializeBody(MessagePackReader reader)
+        private MessagePackSerializer<T> _dataSerializer;
+        
+        public T Data { get; private set; }
+        
+
+        public DataResponse()
         {
-            reader.ReadDictionaryLength();
-            throw new NotImplementedException();
+            _dataSerializer = MessagePackSerializersRepository.Get<T>();
+        }
+        
+        protected override void ReadBody(MessagePackReader reader)
+        {
+            Data = _dataSerializer.Deserialize(reader);
         }
     }
 }

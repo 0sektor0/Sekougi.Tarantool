@@ -1,5 +1,4 @@
 using Sekougi.MessagePack;
-using MessagePackSerializersRepository = Sekougi.MessagePack.Serializers.MessagePackSerializersRepository;
 using Sekougi.Tarantool.Iproto.Enums;
 
 
