@@ -14,7 +14,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
         private string _userName;
         private byte[] _scramble;
         
-        public override RequestCode Code => RequestCode.Auth;
+        public override CommandE Code => CommandE.Auth;
 
 
         public AuthRequest(string userName, string password, ReadOnlySpan<byte> base64Salt)

@@ -9,7 +9,7 @@ namespace Sekougi.Tarantool.Iproto
     public class ResponseFactory
     {
         //TODO: make normal factory (just temporary solution)
-        private readonly Dictionary<RequestCode, Func<ResponseBase>> _responseCreators;
+        private readonly Dictionary<CommandE, Func<ResponseBase>> _responseCreators;
         
         
         public ResponseFactory()
@@ -17,30 +17,30 @@ namespace Sekougi.Tarantool.Iproto
             Func<ResponseBase> dataResponseCreator = () => new DataResponse();
             Func<ResponseBase> okResponseCreator = () => new OkResponse();
             
-            _responseCreators = new Dictionary<RequestCode, Func<ResponseBase>>
+            _responseCreators = new Dictionary<CommandE, Func<ResponseBase>>
             {
-                {RequestCode.ErrorMin, () => new ErrorResponse()},
-                {RequestCode.Ok, okResponseCreator},
-                {RequestCode.Ping, okResponseCreator},
-                {RequestCode.Select, dataResponseCreator},
-                {RequestCode.Insert, dataResponseCreator},
-                {RequestCode.Replace, dataResponseCreator},
-                {RequestCode.Update, dataResponseCreator},
-                {RequestCode.Delete, dataResponseCreator},
-                {RequestCode.Eval, dataResponseCreator},
-                {RequestCode.Upsert, dataResponseCreator},
-                {RequestCode.Call, dataResponseCreator},
-                {RequestCode.Execute, dataResponseCreator},
-                {RequestCode.Nop, dataResponseCreator},
-                {RequestCode.Prepare, dataResponseCreator},
+                {CommandE.ErrorMin, () => new ErrorResponse()},
+                {CommandE.Ok, okResponseCreator},
+                {CommandE.Ping, okResponseCreator},
+                {CommandE.Select, dataResponseCreator},
+                {CommandE.Insert, dataResponseCreator},
+                {CommandE.Replace, dataResponseCreator},
+                {CommandE.Update, dataResponseCreator},
+                {CommandE.Delete, dataResponseCreator},
+                {CommandE.Eval, dataResponseCreator},
+                {CommandE.Upsert, dataResponseCreator},
+                {CommandE.Call, dataResponseCreator},
+                {CommandE.Execute, dataResponseCreator},
+                {CommandE.Nop, dataResponseCreator},
+                {CommandE.Prepare, dataResponseCreator},
             };
         }
 
-        public ResponseBase Create(RequestCode code)
+        public ResponseBase Create(CommandE code)
         {
-            var isError = code >= RequestCode.ErrorMin && code < RequestCode.ErrorMax;
+            var isError = code >= CommandE.ErrorMin && code < CommandE.ErrorMax;
             if (isError)
-                code = RequestCode.ErrorMin;
+                code = CommandE.ErrorMin;
 
             if (_responseCreators.TryGetValue(code, out var creator))
                 return creator.Invoke();

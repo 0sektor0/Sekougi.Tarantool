@@ -1,6 +1,6 @@
 namespace Sekougi.Tarantool.Iproto
 {
-    public enum RequestCode
+    public enum CommandE
     {
         Ok = 0x00,
         Select = 0x01,

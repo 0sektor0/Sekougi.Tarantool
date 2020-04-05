@@ -7,7 +7,7 @@ namespace Sekougi.Tarantool.Exceptions
 {
     public class UnsupportedResponseTypeException : Exception
     {
-        public UnsupportedResponseTypeException(RequestCode code) : base($"Unsupported response type: {code}")
+        public UnsupportedResponseTypeException(CommandE code) : base($"Unsupported response type: {code}")
         {
             
         }

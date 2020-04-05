@@ -8,7 +8,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
     {
         private Header Header;
         
-        public virtual RequestCode Code { get; }
+        public virtual CommandE Code { get; }
 
         public int SyncId
         {

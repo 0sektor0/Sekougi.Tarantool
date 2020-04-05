@@ -4,7 +4,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
 {
     public class PrepareRequest : RequestBase
     {
-        public override RequestCode Code => RequestCode.Prepare;
+        public override CommandE Code => CommandE.Prepare;
 
         protected override void SerializeBody(MessagePackWriter writer)
         {

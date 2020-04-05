@@ -5,7 +5,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
 {
     public class NopRequest : RequestBase
     {
-        public override RequestCode Code => RequestCode.Nop;
+        public override CommandE Code => CommandE.Nop;
 
         protected override void SerializeBody(MessagePackWriter writer)
         {

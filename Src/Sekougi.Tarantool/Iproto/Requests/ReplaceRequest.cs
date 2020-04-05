@@ -5,7 +5,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
 {
     public class ReplaceRequest : RequestBase
     {
-        public override RequestCode Code => RequestCode.Replace;
+        public override CommandE Code => CommandE.Replace;
 
         protected override void SerializeBody(MessagePackWriter writer)
         {

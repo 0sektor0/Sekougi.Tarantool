@@ -13,10 +13,10 @@ namespace Sekougi.Tarantool.Iproto
 
         public int SyncId;
         public int SchemaVersion;
-        public RequestCode Code;
+        public CommandE Code;
 
         
-        public void SetCode(RequestCode code)
+        public void SetCode(CommandE code)
         {
             Code = code;
         }
@@ -60,7 +60,7 @@ namespace Sekougi.Tarantool.Iproto
                 switch (key)
                 {
                     case IPROTO_REQUEST_TYPE_KEY:
-                        Code = (RequestCode) reader.ReadUint();
+                        Code = (CommandE) reader.ReadUint();
                         break;
                     
                     case IPROTO_SYNC_KEY:
