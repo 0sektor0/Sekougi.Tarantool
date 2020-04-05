@@ -1,4 +1,4 @@
-namespace Sekougi.Tarantool.Iproto
+namespace Sekougi.Tarantool.Iproto.Enums
 {
     public enum CommandE
     {

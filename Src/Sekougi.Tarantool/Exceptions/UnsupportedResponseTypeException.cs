@@ -1,5 +1,5 @@
 using System;
-using Sekougi.Tarantool.Iproto;
+using Sekougi.Tarantool.Iproto.Enums;
 
 
 

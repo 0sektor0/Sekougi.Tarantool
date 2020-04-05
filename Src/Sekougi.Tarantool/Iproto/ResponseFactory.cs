@@ -1,6 +1,7 @@
 using Sekougi.Tarantool.Iproto.Responses;
 using System.Collections.Generic;
 using System;
+using Sekougi.Tarantool.Iproto.Enums;
 
 
 

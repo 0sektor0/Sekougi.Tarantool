@@ -1,5 +1,8 @@
 using System;
 using Sekougi.MessagePack;
+using Sekougi.Tarantool.Iproto.Enums;
+
+
 
 namespace Sekougi.Tarantool.Iproto.Requests
 {

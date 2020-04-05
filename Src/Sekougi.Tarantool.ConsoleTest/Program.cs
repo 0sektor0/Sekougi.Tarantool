@@ -6,6 +6,7 @@ using Sekougi.MessagePack;
 using Sekougi.MessagePack.Buffers;
 using Sekougi.Tarantool.Iproto;
 using Sekougi.Tarantool.Iproto.Requests;
+using Sekougi.Tarantool.Iproto.Enums;
 
 
 namespace Sekougi.Tarantool.ConsoleTest
@@ -33,15 +34,16 @@ namespace Sekougi.Tarantool.ConsoleTest
 
             stream.Read(buffer);
             var base64Salt = new ReadOnlySpan<byte>(buffer, 64, 44);
-            var authRequest = new AuthRequest("user_test", "user_test", base64Salt);
-            
-            authRequest.SyncId = 1;
+
+            var authRequest = new AuthRequest("user_test", "user_test", base64Salt) {SyncId = 1};
             requestWriter.Write(authRequest);
-            var response = responseReader.Read();
+            var authResponse = responseReader.Read();
+
+            var selectRequest = new SelectRequest((uint)SystemSpaceE.Vspace, 0, IteratorE.All, 0U) {SyncId = 2};
+            requestWriter.Write(selectRequest);
+            var selectResponse = responseReader.Read();
             
-            authRequest.SyncId = 2;
-            requestWriter.Write(authRequest);
-            response = responseReader.Read();
+            //SniffBytes(stream);
         }
 
         private static void SniffBytes(Stream stream)

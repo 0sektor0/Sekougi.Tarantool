@@ -1,4 +1,5 @@
 using Sekougi.MessagePack;
+using Sekougi.Tarantool.Iproto.Enums;
 
 
 

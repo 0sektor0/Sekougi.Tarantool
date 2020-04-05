@@ -1,6 +1,5 @@
 using Sekougi.MessagePack;
-using Sekougi.Tarantool.Iproto.Requests;
-
+using Sekougi.Tarantool.Iproto.Enums;
 
 
 namespace Sekougi.Tarantool.Iproto
