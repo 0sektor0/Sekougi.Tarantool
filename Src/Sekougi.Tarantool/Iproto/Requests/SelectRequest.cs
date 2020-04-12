@@ -42,7 +42,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
         
         protected override void SerializeBody(MessagePackWriter writer)
         {
-            writer.WriteDictionaryHeader(6);
+            writer.WriteDictionaryLength(6);
             
             writer.Write(IPROTO_SPACE_ID_KEY);
             writer.Write(_spaceId);

@@ -34,13 +34,13 @@ namespace Sekougi.Tarantool.Iproto
         {
             if (SchemaVersion > 0)
             {
-                writer.WriteDictionaryHeader(3);
+                writer.WriteDictionaryLength(3);
                 writer.Write(IPROTO_SCHEMA_VERSION_KEY);
                 writer.Write(SchemaVersion);
             }
             else
             {
-                writer.WriteDictionaryHeader(2);
+                writer.WriteDictionaryLength(2);
             }
             
             writer.Write(IPROTO_REQUEST_TYPE_KEY);

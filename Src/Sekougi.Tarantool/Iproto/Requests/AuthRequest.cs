@@ -26,7 +26,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
         
         protected override void SerializeBody(MessagePackWriter writer)
         {
-            writer.WriteDictionaryHeader(2);
+            writer.WriteDictionaryLength(2);
             
             // username 
             writer.Write(USER_NAME_KEY);
@@ -34,7 +34,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
             
             // tuple with auth mechanism and scramble 
             writer.Write(AUTH_TUPLE_KEY);
-            writer.WriteArrayHeader(2);
+            writer.WriteArrayLength(2);
             writer.Write(AUTH_MECHANISM, Encoding.UTF8);
             writer.WriteBinary(_scramble);
         }

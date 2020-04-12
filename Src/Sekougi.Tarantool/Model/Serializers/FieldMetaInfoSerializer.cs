@@ -15,7 +15,7 @@ namespace Sekougi.Tarantool.Model.Serializers
         
         public override void Serialize(FieldMetaInfo value, MessagePackWriter writer)
         {
-            writer.WriteDictionaryHeader(value.IsNullable ? NULLABLE_FIELD_LENGTH : FIELD_LENGTH);
+            writer.WriteDictionaryLength(value.IsNullable ? NULLABLE_FIELD_LENGTH : FIELD_LENGTH);
             
             writer.Write("name", Encoding.UTF8);
             writer.Write(value.Name, Encoding.UTF8);

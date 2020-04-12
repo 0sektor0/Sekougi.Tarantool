@@ -22,7 +22,7 @@ namespace Sekougi.Tarantool.Model.Serializers
         
         public override void Serialize(Space value, MessagePackWriter writer)
         {
-            writer.WriteArrayHeader(SPACE_LENGTH);
+            writer.WriteArrayLength(SPACE_LENGTH);
             
             writer.Write(value.Id);
             writer.Write(value.OwnerId);
