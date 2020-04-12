@@ -1,4 +1,4 @@
-namespace Sekougi.Tarantool
+namespace Sekougi.Tarantool.Model
 {
     public class Schema
     {
