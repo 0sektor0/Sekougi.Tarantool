@@ -15,6 +15,7 @@ namespace Sekougi.Tarantool.Iproto
         private readonly MessagePackBuffer _serializationBuffer;
         private readonly MessagePackWriter _writer;
         private readonly Stream _destination;
+        private readonly object _lock = new object();
 
         
         public RequestWriter(Stream destination)
@@ -30,6 +31,14 @@ namespace Sekougi.Tarantool.Iproto
         }
 
         public void Write(RequestBase request)
+        {
+            lock (_lock)
+            {
+                WriteInternal(request);
+            }
+        }
+
+        private void WriteInternal(RequestBase request)
         {
             var serializedRequest = SerializeRequest(request);
             _destination.Write(serializedRequest);

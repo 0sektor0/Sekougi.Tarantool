@@ -13,6 +13,7 @@ namespace Sekougi.Tarantool.Iproto
     //TODO: create pool for responses
     public class ResponseReader
     {
+        private readonly object _lock = new object();
         private readonly MessagePackReader _reader;
         
         
@@ -24,6 +25,22 @@ namespace Sekougi.Tarantool.Iproto
 
         public Response Read()
         {
+            lock (_lock)
+            {
+                return ReadInternal();
+            }
+        }
+        
+        public DataResponse<T> Read<T>()
+        {
+            lock (_lock)
+            {
+                return ReadInternal<T>();
+            }
+        }
+
+        private Response ReadInternal()
+        {
             var syncId = ReadId();
             var response = new Response();
             response.Initialize(syncId, _reader);
@@ -31,7 +48,7 @@ namespace Sekougi.Tarantool.Iproto
             return response;
         }
         
-        public DataResponse<T> Read<T>()
+        private DataResponse<T> ReadInternal<T>()
         {
             var syncId = ReadId();
             var response = new DataResponse<T>();
@@ -42,7 +59,7 @@ namespace Sekougi.Tarantool.Iproto
 
         private int ReadId()
         {
-            var length = _reader.ReadUint();
+            _reader.ReadUint();
             var header = new Header();
             header.Deserialize(_reader);
             
@@ -50,8 +67,6 @@ namespace Sekougi.Tarantool.Iproto
             if (isError)
             {
                 var errorMessage = ReadErrorMessage();
-                _reader.ReadRawBytes((int) length);
-                
                 throw new ResponseErrorException(header.SyncId, errorMessage);
             }
 

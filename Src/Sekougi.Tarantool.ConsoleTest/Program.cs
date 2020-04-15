@@ -1,12 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using Sekougi.MessagePack;
-using Sekougi.MessagePack.Buffers;
+﻿using Sekougi.Tarantool.Iproto.Requests;
+using System.Collections.Generic;
 using Sekougi.Tarantool.Iproto;
-using Sekougi.Tarantool.Iproto.Requests;
-
+using Sekougi.Tarantool.Iproto.Enums;
+using Sekougi.Tarantool.Model;
+using System;
 
 
 namespace Sekougi.Tarantool.ConsoleTest
@@ -14,8 +11,10 @@ namespace Sekougi.Tarantool.ConsoleTest
     //Sandbox for some checks
     class Program
     {
-        static int port = 3301;
-        static string host = "127.0.0.1";
+        private static int _port = 3301;
+        private static string _host = "127.0.0.1";
+        private static string _login = "user_test";
+        private static string _password = "user_test";
         
         
         public static void Main()
@@ -25,38 +24,14 @@ namespace Sekougi.Tarantool.ConsoleTest
 
         private static void PlayWithConnection()
         {
-            using var tcpClient = new TcpClient(host, port);
-            var stream = tcpClient.GetStream();
-            var buffer = new byte[512];
-            
-            using var requestWriter = new RequestWriter(stream);
-            var responseReader = new ResponseReader(stream);
+            using var connection = new Connection(_host, _port);
+            connection.Connect(_login, _password);
 
-            stream.Read(buffer);
-            var base64Salt = new ReadOnlySpan<byte>(buffer, 64, 44);
+            var spaceSelectRequest = new SelectRequest((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
+            var spaceSelectResponse = connection.SendRequest<Dictionary<int, Space[]>>(spaceSelectRequest);
 
-            var authRequest = new AuthRequest("user_test", "user_test", base64Salt) {SyncId = 1};
-            requestWriter.Write(authRequest);
-            var authResponse = responseReader.Read();
-
-            //var selectRequest = new SelectRequest((uint)SystemSpaceE.Vspace, 0, IteratorE.All, 0U) {SyncId = 2};
-            //requestWriter.Write(selectRequest);
-            //var selectResponse = responseReader.Read();
-        }
-
-        private static void SniffBytes(Stream stream)
-        {
-            var reader = new MessagePackReader(new MessagePackStreamBuffer(stream));
-            var length = reader.ReadUint();
-            var bytes = new byte[length];
-            stream.Read(bytes);
-
-            var stringBuilder = new StringBuilder();
-            for (var i = 0; i < length; i++)
-            {
-                stringBuilder.Append($"{bytes[i]}, ");
-            }
-            var result = $"[{stringBuilder}]";
+            var indexSelectRequest = new SelectRequest((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U) {SyncId = 2};
+            var indexSelectResponse = connection.SendRequest<Dictionary<int, ValueTuple<uint, uint, string, string, Dictionary<string, bool>, ValueTuple<int, string>[]>>>(indexSelectRequest);
         }
     }
 }
