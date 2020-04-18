@@ -24,6 +24,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
         public override CommandE Code => CommandE.Select;
 
 
+        // TODO: use ReadonlySpan
         public SelectRequest(uint spaceId, int indexId, uint limit, int offset, IteratorE iterator, params uint[] key)
         {
             _spaceId = spaceId;

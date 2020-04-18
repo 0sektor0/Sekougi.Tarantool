@@ -70,17 +70,17 @@ namespace Sekougi.Tarantool
             return Task.Run(() => SendRequest(request));
         }
 
-        public DataResponse<T> SendRequest<T>(RequestBase request)
+        public T SendRequest<T>(RequestBase request)
         {
             request.SyncId = _requestCounter.GetNextId();
             _requestWriter.Write(request);
             var response = _responseReader.Read<T>();
 
-            return response;
+            return response.Data;
         }
 
         // TODO: that's very bad, but i have no time to do better
-        public Task<DataResponse<T>> SendRequestAsync<T>(RequestBase request)
+        public Task<T> SendRequestAsync<T>(RequestBase request)
         {
             return Task.Run(() => SendRequest<T>(request));
         }
