@@ -81,18 +81,25 @@ namespace Sekougi.Tarantool.Model
         public T Insert<T>(T dataToInsert) where T : ITuple
         {
             var insertRequest = new InsertRequest<T>(Id, dataToInsert);
-            var result = _connection.SendRequest<Dictionary<int, T[]>>(insertRequest).Values.First().First();
-            
-            return result;
+            return _connection.SendSingleDataRequest<T>(insertRequest);
         }
 
         public async Task<T> InsertAsync<T>(T dataToInsert) where T : ITuple
         {
             var insertRequest = new InsertRequest<T>(Id, dataToInsert);
-            var response = await _connection.SendRequestAsync<Dictionary<int, T[]>>(insertRequest);
-            var result = response.Values.First().First();
-            
-            return result;
+            return await _connection.SendSingleDataRequestAsync<T>(insertRequest);
+        }
+
+        public T Replace<T>(T dataToInsert) where T : ITuple
+        {
+            var replaceRequest = new ReplaceRequest<T>(Id, dataToInsert);
+            return _connection.SendSingleDataRequest<T>(replaceRequest);
+        }
+
+        public async Task<T> ReplaceAsync<T>(T dataToInsert) where T : ITuple
+        {
+            var replaceRequest = new ReplaceRequest<T>(Id, dataToInsert);
+            return await _connection.SendSingleDataRequestAsync<T>(replaceRequest);
         }
     }
 }

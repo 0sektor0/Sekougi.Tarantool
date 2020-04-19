@@ -66,23 +66,23 @@ namespace Sekougi.Tarantool.Model
         public void Reload()
         {
             var spaceSelectRequest = new SelectRequest((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
-            var spaceSelectResponse = _connection.SendRequest<Dictionary<int, SpaceData[]>>(spaceSelectRequest);
+            var spacesData = _connection.SendMultipleDataRequest<SpaceData>(spaceSelectRequest);
             
             var indexSelectRequest = new SelectRequest((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
-            var indexSelectResponse = _connection.SendRequest<Dictionary<int, IndexData[]>>(indexSelectRequest);
+            var indexesData = _connection.SendMultipleDataRequest<IndexData>(indexSelectRequest);
             
-            Initialize(spaceSelectResponse.Values.First(), indexSelectResponse.Values.First());
+            Initialize(spacesData, indexesData);
         }
         
         public async Task ReloadAsync()
         {
             var spaceSelectRequest = new SelectRequest((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
-            var spaceSelectResponse = await _connection.SendRequestAsync<Dictionary<int, SpaceData[]>>(spaceSelectRequest);
+            var spacesData = await _connection.SendMultipleDataRequestAsync<SpaceData>(spaceSelectRequest);
             
             var indexSelectRequest = new SelectRequest((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
-            var indexSelectResponse = await _connection.SendRequestAsync<Dictionary<int, IndexData[]>>(indexSelectRequest);
+            var indexesData = await _connection.SendMultipleDataRequestAsync<IndexData>(indexSelectRequest);
             
-            Initialize(spaceSelectResponse.Values.First(), indexSelectResponse.Values.First());
+            Initialize(spacesData, indexesData);
         }
 
         private void Initialize(SpaceData[] spacesData, IndexData[] indexesData)

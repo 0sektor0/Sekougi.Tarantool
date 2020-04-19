@@ -24,11 +24,15 @@ namespace Sekougi.Tarantool.ConsoleTest
             connection.Connect(_login, _password);
             
             var schema = new Schema(connection);
-            schema.Reload();//.ReloadAsync().GetAwaiter().GetResult();
+            schema.ReloadAsync().GetAwaiter().GetResult();
 
             var testSpace = schema["tester"];
-            var dataToInsert = (13u, "2", 1997u);
-            var result = testSpace.InsertAsync(dataToInsert).GetAwaiter().GetResult();
+            
+            var dataToInsert = (16u, "0", 1997u);
+            testSpace.InsertAsync(dataToInsert);
+            
+            var dataToReplace = (16u, "1", 2000u);
+            var replaceResult = testSpace.ReplaceAsync(dataToReplace).GetAwaiter().GetResult();
         }
     }
 }

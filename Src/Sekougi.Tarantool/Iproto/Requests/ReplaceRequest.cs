@@ -1,18 +1,18 @@
-using System;
-using Sekougi.MessagePack;
+using System.Runtime.CompilerServices;
 using Sekougi.Tarantool.Iproto.Enums;
 
 
 
 namespace Sekougi.Tarantool.Iproto.Requests
 {
-    public class ReplaceRequest : RequestBase
+    public class ReplaceRequest<T> : InsertRequest<T> where T : ITuple
     {
         public override CommandE Code => CommandE.Replace;
-
-        protected override void SerializeBody(MessagePackWriter writer)
+        
+        
+        public ReplaceRequest(uint spaceId,  T dataToInsert) : base(spaceId, dataToInsert)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

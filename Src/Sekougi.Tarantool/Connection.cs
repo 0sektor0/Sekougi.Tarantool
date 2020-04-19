@@ -1,9 +1,8 @@
 using Sekougi.Tarantool.Iproto.Requests;
 using Sekougi.Tarantool.Iproto;
-using System.Net.Sockets;
 using System;
+using System.Net.Sockets;
 using System.Threading.Tasks;
-using Sekougi.Tarantool.Iproto.Responses;
 
 
 
@@ -57,32 +56,45 @@ namespace Sekougi.Tarantool
             Authorize(user, password);
         }
 
-        public void SendRequest(RequestBase request)
+        public void SendEmptyDataRequest(RequestBase request)
         {
             request.SyncId = _requestCounter.GetNextId();
             _requestWriter.Write(request);
-            _responseReader.Read();
+            _responseReader.ReadEmptyData();
         }
 
         // TODO: that's very bad, but i have no time to do better
-        public Task SendRequestAsync(RequestBase request)
+        public Task SendEmptyDataRequestAsync(RequestBase request)
         {
-            return Task.Run(() => SendRequest(request));
+            return Task.Run(() => SendEmptyDataRequest(request));
         }
 
-        public T SendRequest<T>(RequestBase request)
+        public T SendSingleDataRequest<T>(RequestBase request)
         {
             request.SyncId = _requestCounter.GetNextId();
             _requestWriter.Write(request);
-            var response = _responseReader.Read<T>();
+            var responseData = _responseReader.ReadSingleData<T>();
 
-            return response.Data;
+            return responseData;
         }
 
-        // TODO: that's very bad, but i have no time to do better
-        public Task<T> SendRequestAsync<T>(RequestBase request)
+        public Task<T> SendSingleDataRequestAsync<T>(RequestBase request)
         {
-            return Task.Run(() => SendRequest<T>(request));
+            return Task.Run(() => SendSingleDataRequest<T>(request));
+        }
+
+        public T[] SendMultipleDataRequest<T>(RequestBase request)
+        {
+            request.SyncId = _requestCounter.GetNextId();
+            _requestWriter.Write(request);
+            var responseData = _responseReader.ReadMultipleData<T>();
+
+            return responseData;
+        }
+
+        public Task<T[]> SendMultipleDataRequestAsync<T>(RequestBase request)
+        {
+            return Task.Run(() => SendMultipleDataRequest<T>(request));
         }
 
         private void Authorize(string user, string password)
@@ -93,7 +105,7 @@ namespace Sekougi.Tarantool
             var base64Salt = buffer.Slice(64, 44);
 
             var authRequest = new AuthRequest(user, password, base64Salt);
-            SendRequest(authRequest);
+            SendEmptyDataRequest(authRequest);
         }
     }
 }

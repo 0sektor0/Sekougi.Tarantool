@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using Sekougi.Tarantool.Exceptions;
 using Sekougi.Tarantool.Iproto.Enums;
-using Sekougi.Tarantool.Iproto.Responses;
 
 
 
@@ -23,38 +22,72 @@ namespace Sekougi.Tarantool.Iproto
             _reader = new MessagePackReader(buffer);
         }
 
-        public Response Read()
+        public void ReadEmptyData()
         {
             lock (_lock)
             {
-                return ReadInternal();
+                ReadEmptyDataInternal();
             }
         }
         
-        public DataResponse<T> Read<T>()
+        public T ReadSingleData<T>()
         {
             lock (_lock)
             {
-                return ReadInternal<T>();
+                return ReadSingleDataInternal<T>();
+            }
+        }
+        
+        public T[] ReadMultipleData<T>()
+        {
+            lock (_lock)
+            {
+                return ReadMultipleDataInternal<T>();
             }
         }
 
-        private Response ReadInternal()
+        private void ReadEmptyDataInternal()
         {
-            var syncId = ReadId();
-            var response = new Response();
-            response.Initialize(syncId, _reader);
-
-            return response;
+            var (syncId, objectsCount) = ReadResponseInfo();
+            if (objectsCount != 0)
+                throw new InvalidResponseLengthException(syncId, 0, objectsCount);
         }
         
-        private DataResponse<T> ReadInternal<T>()
+        private T ReadSingleDataInternal<T>()
         {
-            var syncId = ReadId();
-            var response = new DataResponse<T>();
-            response.Initialize(syncId, _reader);
+            var (syncId, objectsCount) = ReadResponseInfo();
             
-            return response;
+            var dataLength = objectsCount;
+            if (dataLength != 1)
+                throw new InvalidResponseLengthException(syncId, 1, objectsCount);
+
+            return MessagePackSerializersRepository.Get<T>().Deserialize(_reader);
+        }
+
+        private T[] ReadMultipleDataInternal<T>()
+        {
+            var syncId = ReadId();
+            
+            var dictionaryLength = _reader.ReadDictionaryLength();
+            if (dictionaryLength == 0)
+                return new T[0];
+
+            var key = _reader.ReadInt();
+            var dataArray = MessagePackSerializersRepository.Get<T[]>().Deserialize(_reader);
+
+            return dataArray;
+        }
+
+        private (int syncId, int objectsCount) ReadResponseInfo()
+        {
+            var syncId = ReadId();
+            
+            var dictionaryLength = _reader.ReadDictionaryLength();
+            if (dictionaryLength == 0)
+                return (syncId, 0);
+
+            var key = _reader.ReadInt();
+            return (syncId, _reader.ReadArrayLength());
         }
 
         private int ReadId()
