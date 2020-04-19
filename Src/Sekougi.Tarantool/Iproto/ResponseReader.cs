@@ -63,6 +63,7 @@ namespace Sekougi.Tarantool.Iproto
             var header = new Header();
             header.Deserialize(_reader);
             
+            // TODO: add exception for each error
             var isError = header.Code >= CommandE.ErrorMin && header.Code < CommandE.ErrorMax;
             if (isError)
             {
