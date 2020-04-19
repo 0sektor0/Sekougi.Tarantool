@@ -1,7 +1,8 @@
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Collections.Generic;
+using Sekougi.Tarantool.Iproto.UpdateOperations;
 using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Sekougi.Tarantool.Exceptions;
 using Sekougi.Tarantool.Iproto.Requests;
@@ -100,6 +101,18 @@ namespace Sekougi.Tarantool.Model
         {
             var replaceRequest = new ReplaceRequest<T>(Id, dataToInsert);
             return await _connection.SendSingleDataRequestAsync<T>(replaceRequest);
+        }
+
+        public TData[] Update<TKey, TData>(uint indexId, TKey key, params IUpdateOperation[] updateOperations) where TKey : ITuple
+        {
+            var updateRequest = new UpdateRequest<TKey>(Id, indexId, key, updateOperations);
+            return _connection.SendMultipleDataRequest<TData>(updateRequest);
+        }
+
+        public async Task<TData[]> UpdateAsync<TKey, TData>(uint indexId, TKey key, params IUpdateOperation[] updateOperations) where TKey : ITuple
+        {
+            var updateRequest = new UpdateRequest<TKey>(Id, indexId, key, updateOperations);
+            return await _connection.SendMultipleDataRequestAsync<TData>(updateRequest);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Sekougi.Tarantool.Model
             SpaceId = indexData.Item1;
             Id = indexData.Item2;
             Name = indexData.Item3;
-            Type = ModelUtils.GetIndexTypeFromString(indexData.Item4);
+            Type = IndexTypeConverter.FromString(indexData.Item4);
             Options = new ReadOnlyDictionary<string, bool>(indexData.Item5);
             KeyTypes = indexData.Item6;
         }

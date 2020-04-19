@@ -1,11 +1,12 @@
 using System;
-using Sekougi.Tarantool.Model.Enums;
 
-namespace Sekougi.Tarantool.Model
+
+
+namespace Sekougi.Tarantool.Model.Enums
 {
-    public class ModelUtils
+    public static class IndexTypeConverter
     {
-        public static IndexTypeE GetIndexTypeFromString(string indexTypeString)
+        public static IndexTypeE FromString(string indexTypeString)
         {
             switch (indexTypeString)
             {

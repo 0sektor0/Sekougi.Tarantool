@@ -12,7 +12,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
         private const int IPROTO_LIMIT_KEY    = 0x12;
         private const int IPROTO_OFFSET_KEY   = 0x13;
         private const int IPROTO_ITERATOR_KEY = 0x14;
-        private const int IPROTO_KYE_KEY      = 0x20;
+        private const int IPROTO_KEY_KEY      = 0x20;
         
         private readonly uint _spaceId;
         private readonly uint _limit;
@@ -60,7 +60,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
             writer.Write(IPROTO_ITERATOR_KEY);
             writer.Write((uint)_iterator);
 
-            writer.Write(IPROTO_KYE_KEY);
+            writer.Write(IPROTO_KEY_KEY);
             MessagePackSerializersRepository.Get<uint[]>().Serialize(_key, writer);
         }
     }

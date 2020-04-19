@@ -1,4 +1,7 @@
-﻿using Sekougi.Tarantool.Model;
+﻿using System;
+using Sekougi.Tarantool.Iproto.Enums;
+using Sekougi.Tarantool.Iproto.UpdateOperations;
+using Sekougi.Tarantool.Model;
 
 
 
@@ -27,12 +30,16 @@ namespace Sekougi.Tarantool.ConsoleTest
             schema.ReloadAsync().GetAwaiter().GetResult();
 
             var testSpace = schema["tester"];
-            
-            var dataToInsert = (16u, "0", 1997u);
+
+            var updateOperation = new UpdateOperation<string>(UpdateOperatorE.Assignment, 1, "updated");
+            var key = new ValueTuple<int>(16);
+            var data = testSpace.Update<ValueTuple<int>, ValueTuple<uint, string, uint>>(0, key, updateOperation);
+
+            /*var dataToInsert = (16u, "0", 1997u);
             testSpace.InsertAsync(dataToInsert);
             
             var dataToReplace = (16u, "1", 2000u);
-            var replaceResult = testSpace.ReplaceAsync(dataToReplace).GetAwaiter().GetResult();
+            var replaceResult = testSpace.ReplaceAsync(dataToReplace).GetAwaiter().GetResult();*/
         }
     }
 }
