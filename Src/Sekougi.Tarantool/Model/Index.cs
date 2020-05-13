@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Sekougi.Tarantool.Iproto.Enums;
+using Sekougi.Tarantool.Iproto.Requests;
 using IndexData = System.ValueTuple<uint, uint, string, string, System.Collections.Generic.Dictionary<string, bool>, System.ValueTuple<int, string>[]>;
 
 
@@ -40,6 +43,19 @@ namespace Sekougi.Tarantool.Model
                 throw new InvalidDataException($"expected space with Id: {SpaceId} got space with Id {space.Id}");
 
             Space = space;
+        }
+        
+        public TData[] Select<TData, TKey>(uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        {
+            var selectRequest = new SelectRequest<TKey>(SpaceId, Id, limit, offset, iterator, key);
+            return _connection.SendMultipleDataRequest<TData>(selectRequest);
+            
+        }
+        
+        public Task<TData[]> SelectAsync<TData, TKey>(uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        {
+            var selectRequest = new SelectRequest<TKey>(SpaceId, Id, limit, offset, iterator, key);
+            return _connection.SendMultipleDataRequestAsync<TData>(selectRequest);
         }
     }
 }

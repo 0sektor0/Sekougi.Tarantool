@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Sekougi.Tarantool.Exceptions;
+using Sekougi.Tarantool.Iproto.Enums;
 using Sekougi.Tarantool.Iproto.Requests;
 using SpaceData = System.ValueTuple<uint, uint, string, string, int, Sekougi.Tarantool.Model.FlagsInfo, Sekougi.Tarantool.Model.FieldMetaInfo[]>;
 
@@ -79,6 +80,26 @@ namespace Sekougi.Tarantool.Model
             _indexesByName = Indexes.ToDictionary(index => index.Name);
         }
 
+        public TData[] Select<TData, TKey>(uint indexId, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        {
+            return _indexesById[indexId].Select<TData, TKey>(limit, offset, iterator, key);
+        }
+
+        public Task<TData[]> SelectAsync<TData, TKey>(uint indexId, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        {
+            return _indexesById[indexId].SelectAsync<TData, TKey>(limit, offset, iterator, key);
+        }
+
+        public TData[] Select<TData, TKey>(string indexName, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        {
+            return _indexesByName[indexName].Select<TData, TKey>(limit, offset, iterator, key);
+        }
+
+        public Task<TData[]> SelectAsync<TData, TKey>(string indexName, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        {
+            return _indexesByName[indexName].SelectAsync<TData, TKey>(limit, offset, iterator, key);
+        }
+        
         public T Insert<T>(T dataToInsert) where T : ITuple
         {
             var insertRequest = new InsertRequest<T>(Id, dataToInsert);

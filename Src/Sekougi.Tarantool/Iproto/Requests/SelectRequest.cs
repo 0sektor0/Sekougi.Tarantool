@@ -5,7 +5,7 @@ using Sekougi.Tarantool.Iproto.Enums;
 
 namespace Sekougi.Tarantool.Iproto.Requests
 {
-    public class SelectRequest : RequestBase
+    public class SelectRequest<T> : RequestBase
     {
         private const int IPROTO_SPACE_ID_KEY = 0x10;
         private const int IPROTO_INDEX_ID_KEY = 0x11;
@@ -16,16 +16,16 @@ namespace Sekougi.Tarantool.Iproto.Requests
         
         private readonly uint _spaceId;
         private readonly uint _limit;
-        private readonly uint[] _key;
-        private readonly int _indexId;
-        private readonly int _offset;
+        private readonly T[] _key;
+        private readonly uint _indexId;
+        private readonly uint _offset;
         private readonly IteratorE _iterator;
         
         public override CommandE Code => CommandE.Select;
 
 
         // TODO: use ReadonlySpan
-        public SelectRequest(uint spaceId, int indexId, uint limit, int offset, IteratorE iterator, params uint[] key)
+        public SelectRequest(uint spaceId, uint indexId, uint limit, uint offset, IteratorE iterator, params T[] key)
         {
             _spaceId = spaceId;
             _indexId = indexId;
@@ -35,7 +35,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
             _key = key;
         }
         
-        public SelectRequest(uint spaceId, int indexId, IteratorE iterator, params uint[] key) 
+        public SelectRequest(uint spaceId, uint indexId, IteratorE iterator, params T[] key) 
             : this(spaceId, indexId, uint.MaxValue, 0, iterator, key)
         {
             
@@ -61,7 +61,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
             writer.Write((uint)_iterator);
 
             writer.Write(IPROTO_KEY_KEY);
-            MessagePackSerializersRepository.Get<uint[]>().Serialize(_key, writer);
+            MessagePackSerializersRepository.Get<T[]>().Serialize(_key, writer);
         }
     }
 }

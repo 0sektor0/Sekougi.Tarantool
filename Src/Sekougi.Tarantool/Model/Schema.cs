@@ -19,8 +19,6 @@ namespace Sekougi.Tarantool.Model
         private readonly Connection _connection;
         private Dictionary<uint, Space> _spacesById;
         private Dictionary<string, Space> _spacesByName;
-        private Dictionary<uint, Index> _indexesById;
-        private Dictionary<string, Index> _indexesByName;
 
         public DateTime LastReloadTime { get; private set; }
         public IReadOnlyCollection<Space> Spaces { get; private set; }
@@ -65,10 +63,10 @@ namespace Sekougi.Tarantool.Model
         
         public void Reload()
         {
-            var spaceSelectRequest = new SelectRequest((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
+            var spaceSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
             var spacesData = _connection.SendMultipleDataRequest<SpaceData>(spaceSelectRequest);
             
-            var indexSelectRequest = new SelectRequest((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
+            var indexSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
             var indexesData = _connection.SendMultipleDataRequest<IndexData>(indexSelectRequest);
             
             Initialize(spacesData, indexesData);
@@ -76,10 +74,10 @@ namespace Sekougi.Tarantool.Model
         
         public async Task ReloadAsync()
         {
-            var spaceSelectRequest = new SelectRequest((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
+            var spaceSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
             var spacesData = await _connection.SendMultipleDataRequestAsync<SpaceData>(spaceSelectRequest);
             
-            var indexSelectRequest = new SelectRequest((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
+            var indexSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
             var indexesData = await _connection.SendMultipleDataRequestAsync<IndexData>(indexSelectRequest);
             
             Initialize(spacesData, indexesData);
