@@ -16,7 +16,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
         
         private readonly uint _spaceId;
         private readonly uint _limit;
-        private readonly T[] _key;
+        private readonly T _key;
         private readonly uint _indexId;
         private readonly uint _offset;
         private readonly IteratorE _iterator;
@@ -25,7 +25,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
 
 
         // TODO: use ReadonlySpan
-        public SelectRequest(uint spaceId, uint indexId, uint limit, uint offset, IteratorE iterator, params T[] key)
+        public SelectRequest(uint spaceId, uint indexId, uint limit, uint offset, IteratorE iterator, T key)
         {
             _spaceId = spaceId;
             _indexId = indexId;
@@ -35,7 +35,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
             _key = key;
         }
         
-        public SelectRequest(uint spaceId, uint indexId, IteratorE iterator, params T[] key) 
+        public SelectRequest(uint spaceId, uint indexId, IteratorE iterator,T key) 
             : this(spaceId, indexId, uint.MaxValue, 0, iterator, key)
         {
             
@@ -61,7 +61,7 @@ namespace Sekougi.Tarantool.Iproto.Requests
             writer.Write((uint)_iterator);
 
             writer.Write(IPROTO_KEY_KEY);
-            MessagePackSerializersRepository.Get<T[]>().Serialize(_key, writer);
+            MessagePackSerializersRepository.Get<T>().Serialize(_key, writer);
         }
     }
 }

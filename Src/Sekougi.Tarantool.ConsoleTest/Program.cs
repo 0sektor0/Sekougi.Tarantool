@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
 using Sekougi.Tarantool.Iproto.Enums;
 using Sekougi.Tarantool.Iproto.UpdateOperations;
 using Sekougi.Tarantool.Model;
-
+using Redocrd = System.ValueTuple<uint, string, uint>;
 
 
 namespace Sekougi.Tarantool.ConsoleTest
@@ -34,15 +33,10 @@ namespace Sekougi.Tarantool.ConsoleTest
 
             var updateOperation = new UpdateOperation<string>(UpdateOperatorE.Assignment, 1, "updated");
             var key = new ValueTuple<int>(16);
-            var data = testSpace.Update<ValueTuple<int>, ValueTuple<uint, string, uint>>(0, key, updateOperation);
+            var data = testSpace.Update<ValueTuple<int>, Redocrd>(0, key, updateOperation);
 
             var index = testSpace["primary"];
-            var allData = index.Select<ValueTuple<uint, string, uint>, uint>(UInt32.MaxValue, 0, IteratorE.All);
-            /*var dataToInsert = (16u, "0", 1997u);
-            testSpace.InsertAsync(dataToInsert);
-            
-            var dataToReplace = (16u, "1", 2000u);
-            var replaceResult = testSpace.ReplaceAsync(dataToReplace).GetAwaiter().GetResult();*/
+            data = index.Select<ValueTuple<uint>, Redocrd>(UInt32.MaxValue, 0, IteratorE.All, new ValueTuple<uint>(0));
         }
     }
 }

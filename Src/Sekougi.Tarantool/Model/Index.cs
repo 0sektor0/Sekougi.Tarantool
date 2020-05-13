@@ -45,14 +45,14 @@ namespace Sekougi.Tarantool.Model
             Space = space;
         }
         
-        public TData[] Select<TData, TKey>(uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        public TData[] Select<TKey, TData>(uint limit, uint offset, IteratorE iterator, TKey key)
         {
             var selectRequest = new SelectRequest<TKey>(SpaceId, Id, limit, offset, iterator, key);
             return _connection.SendMultipleDataRequest<TData>(selectRequest);
             
         }
         
-        public Task<TData[]> SelectAsync<TData, TKey>(uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        public Task<TData[]> SelectAsync<TKey, TData>(uint limit, uint offset, IteratorE iterator,TKey key)
         {
             var selectRequest = new SelectRequest<TKey>(SpaceId, Id, limit, offset, iterator, key);
             return _connection.SendMultipleDataRequestAsync<TData>(selectRequest);

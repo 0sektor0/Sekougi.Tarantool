@@ -63,10 +63,11 @@ namespace Sekougi.Tarantool.Model
         
         public void Reload()
         {
-            var spaceSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
+            var key = new ValueTuple<uint>(0u);
+            var spaceSelectRequest = new SelectRequest<ValueTuple<uint>>((uint) SystemSpaceE.Vspace, 0, IteratorE.All, key);
             var spacesData = _connection.SendMultipleDataRequest<SpaceData>(spaceSelectRequest);
             
-            var indexSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
+            var indexSelectRequest = new SelectRequest<ValueTuple<uint>>((uint) SystemSpaceE.Vindex, 0, IteratorE.All, key);
             var indexesData = _connection.SendMultipleDataRequest<IndexData>(indexSelectRequest);
             
             Initialize(spacesData, indexesData);
@@ -74,10 +75,11 @@ namespace Sekougi.Tarantool.Model
         
         public async Task ReloadAsync()
         {
-            var spaceSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vspace, 0, IteratorE.All, 0U);
+            var key = new ValueTuple<uint>(0u);
+            var spaceSelectRequest = new SelectRequest<ValueTuple<uint>>((uint) SystemSpaceE.Vspace, 0, IteratorE.All, key);
             var spacesData = await _connection.SendMultipleDataRequestAsync<SpaceData>(spaceSelectRequest);
             
-            var indexSelectRequest = new SelectRequest<uint>((uint) SystemSpaceE.Vindex, 0, IteratorE.All, 0U);
+            var indexSelectRequest = new SelectRequest<ValueTuple<uint>>((uint) SystemSpaceE.Vindex, 0, IteratorE.All, key);
             var indexesData = await _connection.SendMultipleDataRequestAsync<IndexData>(indexSelectRequest);
             
             Initialize(spacesData, indexesData);

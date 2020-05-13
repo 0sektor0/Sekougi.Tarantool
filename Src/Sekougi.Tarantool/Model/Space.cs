@@ -80,24 +80,24 @@ namespace Sekougi.Tarantool.Model
             _indexesByName = Indexes.ToDictionary(index => index.Name);
         }
 
-        public TData[] Select<TData, TKey>(uint indexId, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        public TData[] Select<TKey, TData>(uint indexId, uint limit, uint offset, IteratorE iterator, TKey key)
         {
-            return _indexesById[indexId].Select<TData, TKey>(limit, offset, iterator, key);
+            return _indexesById[indexId].Select<TKey, TData>(limit, offset, iterator, key);
         }
 
-        public Task<TData[]> SelectAsync<TData, TKey>(uint indexId, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        public Task<TData[]> SelectAsync<TKey, TData>(uint indexId, uint limit, uint offset, IteratorE iterator, TKey key)
         {
-            return _indexesById[indexId].SelectAsync<TData, TKey>(limit, offset, iterator, key);
+            return _indexesById[indexId].SelectAsync<TKey, TData>(limit, offset, iterator, key);
         }
 
-        public TData[] Select<TData, TKey>(string indexName, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        public TData[] Select<TKey, TData>(string indexName, uint limit, uint offset, IteratorE iterator, TKey key)
         {
-            return _indexesByName[indexName].Select<TData, TKey>(limit, offset, iterator, key);
+            return _indexesByName[indexName].Select<TKey, TData>(limit, offset, iterator, key);
         }
 
-        public Task<TData[]> SelectAsync<TData, TKey>(string indexName, uint limit, uint offset, IteratorE iterator, params TKey[] key)
+        public Task<TData[]> SelectAsync<TKey, TData>(string indexName, uint limit, uint offset, IteratorE iterator, TKey key)
         {
-            return _indexesByName[indexName].SelectAsync<TData, TKey>(limit, offset, iterator, key);
+            return _indexesByName[indexName].SelectAsync<TKey, TData>(limit, offset, iterator, key);
         }
         
         public T Insert<T>(T dataToInsert) where T : ITuple
