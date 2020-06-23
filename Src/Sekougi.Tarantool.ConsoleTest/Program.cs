@@ -1,8 +1,12 @@
 ﻿using System;
+using ProGaudi.Tarantool.Client;
+using ProGaudi.Tarantool.Client.Model;
+using ProGaudi.Tarantool.Client.Model.Enums;
 using Sekougi.Tarantool.Iproto.Enums;
+using Sekougi.Tarantool.Iproto.Requests;
 using Sekougi.Tarantool.Iproto.UpdateOperations;
-using Sekougi.Tarantool.Model;
 using Redocrd = System.ValueTuple<uint, string, uint>;
+using Schema = Sekougi.Tarantool.Model.Schema;
 
 
 namespace Sekougi.Tarantool.ConsoleTest
@@ -18,7 +22,8 @@ namespace Sekougi.Tarantool.ConsoleTest
         
         public static void Main()
         {
-            PlayWithConnection();
+            //PlayWithConnection();
+            Test();
         }
 
         private static void PlayWithConnection()
@@ -37,6 +42,29 @@ namespace Sekougi.Tarantool.ConsoleTest
 
             var index = testSpace["primary"];
             data = index.Select<ValueTuple<uint>, Redocrd>(UInt32.MaxValue, 0, IteratorE.All, new ValueTuple<uint>(0));
+        }
+
+        private static void Test()
+        {
+            var box = Box.Connect(_host, _port, _login, _password).GetAwaiter().GetResult();
+            var boxSelect = box.Schema["tester"]["primary"]
+                .Select<TarantoolTuple<uint>, TarantoolTuple<uint, string, uint>>(new TarantoolTuple<uint>(0), new SelectOptions
+                {
+                    Iterator = Iterator.All
+                })
+                .GetAwaiter().GetResult();
+            
+            var connection = new Connection(_host, _port);
+            connection.Connect(_login, _password);
+            var schemaSekougi = new Schema(connection);
+            schemaSekougi.ReloadAsync().GetAwaiter().GetResult();
+            
+            var sekSelect = schemaSekougi["tester"]["primary"]
+                .SelectAsync<ValueTuple<uint>, Redocrd>(UInt32.MaxValue, 0, IteratorE.All, new ValueTuple<uint>(0))
+                .GetAwaiter().GetResult();
+
+            var pingRequest = new PingRequest();
+            connection.SendEmptyDataRequest(pingRequest);
         }
     }
 }

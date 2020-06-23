@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sekougi.Tarantool.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sekougi.Tarantool.ConsoleTest", "Src\Sekougi.Tarantool.ConsoleTest\Sekougi.Tarantool.ConsoleTest.csproj", "{97CDBE21-066B-4F88-B937-3DB4A7AECD24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sekougi.Tarantool.Benchmark", "Src\Sekougi.Tarantool.Benchmark\Sekougi.Tarantool.Benchmark.csproj", "{F4EC211A-9C9F-464F-9D90-D0752309B336}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{97CDBE21-066B-4F88-B937-3DB4A7AECD24}.Release|x64.Build.0 = Release|Any CPU
 		{97CDBE21-066B-4F88-B937-3DB4A7AECD24}.Release|x86.ActiveCfg = Release|Any CPU
 		{97CDBE21-066B-4F88-B937-3DB4A7AECD24}.Release|x86.Build.0 = Release|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Debug|x64.Build.0 = Debug|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Debug|x86.Build.0 = Debug|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Release|x64.ActiveCfg = Release|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Release|x64.Build.0 = Release|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Release|x86.ActiveCfg = Release|Any CPU
+		{F4EC211A-9C9F-464F-9D90-D0752309B336}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
