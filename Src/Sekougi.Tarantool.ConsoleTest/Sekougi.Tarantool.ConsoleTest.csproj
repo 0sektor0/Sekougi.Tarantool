@@ -6,7 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Sekougi.MessagePack" Version="1.0.10" />
+      <PackageReference Include="progaudi.tarantool" Version="0.13.0" />
+      <PackageReference Include="Sekougi.MessagePack" Version="1.0.12" />
     </ItemGroup>
 
     <ItemGroup>
